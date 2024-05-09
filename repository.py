@@ -25,3 +25,10 @@ class UserRepository:
             user_models = result.scalars().all()
             # user_schemas = [User.model_validate(user_model) for user_model in user_models]
             return user_models
+
+    @classmethod
+    async def get_user_by_username(cls, email: str):
+        async with new_session() as session:
+            response = await session.execute(select(UserOrm).filter(UserOrm.email == email))
+            user_model = response.scalars().first()
+            return user_model
